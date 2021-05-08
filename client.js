@@ -57,22 +57,7 @@ const getPositionErrorMessage = (code) => {
 };
 
 
-      
-  socket.on("DriverLocation", (data) => {
-    console.log(data);
-    const initialPosition = { lat: 59.32, lng: 17.84 };
-    const map = createMap(initialPosition);
-    const marker = createMarker({ map, position: initialPosition });
-    const $info = document.getElementById("info");
-    
-    let lat = data.coords.latitude;
-    let lng = data.coords.longitude;
 
-    marker.setPosition({ lat, lng });
-    map.panTo({ lat, lng });
-    $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
-    $info.classList.remove("error");
-  });
 
 
 /**
@@ -86,7 +71,19 @@ function init() {
   const map = createMap(initialPosition);
   const marker = createMarker({ map, position: initialPosition });
   const $info = document.getElementById("info");
+          
+  socket.on("DriverLocation", (data) => {
+    console.log(data);
+    let lat = data.coords.latitude;
+    let lng = data.coords.longitude;
+    let position = { lat, lng };
     
+    map.setCenter(position);
+    map.setPosition(position);
+
+    $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
+    $info.classList.remove("error");
+  });
   
   // let watchId = trackLocation({
   //   onSuccess: ({ coords: { latitude: lat, longitude: lng } }) => {
