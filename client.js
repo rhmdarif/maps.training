@@ -57,23 +57,14 @@ const getPositionErrorMessage = (code) => {
 };
 
 
-
-
-/**
- * Initialize the application.
- * Automatically called by the google maps API once it's loaded.
- */
-function init() {
-
-  
-  const initialPosition = { lat: 59.32, lng: 17.84 };
-  const map = createMap(initialPosition);
-  const marker = createMarker({ map, position: initialPosition });
-  const $info = document.getElementById("info");
-    
       
   socket.on("DriverLocation", (data) => {
     console.log(data);
+    const initialPosition = { lat: 59.32, lng: 17.84 };
+    const map = createMap(initialPosition);
+    const marker = createMarker({ map, position: initialPosition });
+    const $info = document.getElementById("info");
+    
     let lat = data.coords.latitude;
     let lng = data.coords.longitude;
 
@@ -82,6 +73,20 @@ function init() {
     $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
     $info.classList.remove("error");
   });
+
+
+/**
+ * Initialize the application.
+ * Automatically called by the google maps API once it's loaded.
+ */
+function init() {
+  console.log("Exec");
+  
+  const initialPosition = { lat: 59.32, lng: 17.84 };
+  const map = createMap(initialPosition);
+  const marker = createMarker({ map, position: initialPosition });
+  const $info = document.getElementById("info");
+    
   
   // let watchId = trackLocation({
   //   onSuccess: ({ coords: { latitude: lat, longitude: lng } }) => {
