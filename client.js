@@ -58,46 +58,49 @@ const getPositionErrorMessage = (code) => {
 
 
 
-  
-const initialPosition = { lat: 59.32, lng: 17.84 };
-const map = createMap(initialPosition);
-const marker = createMarker({ map, position: initialPosition });
-const $info = document.getElementById("info");
-  
-socket.on("DriverLocation", (data) => {
-  console.log(data);
-  let lat = data.coords.latitude;
-  let lng = data.coords.longitude;
 
-  marker.setPosition({ lat, lng });
-  map.panTo({ lat, lng });
-  $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
-  $info.classList.remove("error");
-});
 /**
  * Initialize the application.
  * Automatically called by the google maps API once it's loaded.
  */
-// function init() {
+function init() {
 
-//   let watchId = trackLocation({
-//     onSuccess: ({ coords: { latitude: lat, longitude: lng } }) => {
-//       console.log(lat, lng);
+  
+  const initialPosition = { lat: 59.32, lng: 17.84 };
+  const map = createMap(initialPosition);
+  const marker = createMarker({ map, position: initialPosition });
+  const $info = document.getElementById("info");
+    
       
-//       // SEND TO SOCKET
-//       socket.emit("DriverLocation", { coords: { latitude: lat, longitude: lng } });
+  socket.on("DriverLocation", (data) => {
+    console.log(data);
+    let lat = data.coords.latitude;
+    let lng = data.coords.longitude;
 
-//       marker.setPosition({ lat, lng });
-//       map.panTo({ lat, lng });
-//       $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
-//       $info.classList.remove("error");
-//     },
-//     onError: (err) => {
-//       console.log($info);
-//       $info.textContent = `Error: ${
-//         err.message || getPositionErrorMessage(err.code)
-//       }`;
-//       $info.classList.add("error");
-//     },
-//   });
-// }
+    marker.setPosition({ lat, lng });
+    map.panTo({ lat, lng });
+    $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
+    $info.classList.remove("error");
+  });
+  
+  // let watchId = trackLocation({
+  //   onSuccess: ({ coords: { latitude: lat, longitude: lng } }) => {
+  //     console.log(lat, lng);
+      
+  //     // SEND TO SOCKET
+  //     socket.emit("DriverLocation", { coords: { latitude: lat, longitude: lng } });
+
+  //     marker.setPosition({ lat, lng });
+  //     map.panTo({ lat, lng });
+  //     $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
+  //     $info.classList.remove("error");
+  //   },
+  //   onError: (err) => {
+  //     console.log($info);
+  //     $info.textContent = `Error: ${
+  //       err.message || getPositionErrorMessage(err.code)
+  //     }`;
+  //     $info.classList.add("error");
+  //   },
+  // });
+}
