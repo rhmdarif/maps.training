@@ -38,7 +38,7 @@ const trackLocation = ({ onSuccess, onError = () => {} }) => {
 
   return navigator.geolocation.watchPosition(onSuccess, onError, {
     enableHighAccuracy: true,
-    timeout: 15000,
+    timeout: 5000,
     maximumAge: 0,
   });
 };
