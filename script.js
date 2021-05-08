@@ -1,3 +1,7 @@
+const socket = io("http://addowebserver.herokuapp.com/");
+socket.on("DriverLocation", (data) => {
+  console.log(data);
+});
 /**
  * Create google maps Map instance.
  * @param {number} lat
@@ -5,9 +9,9 @@
  * @return {Object}
  */
 const createMap = ({ lat, lng }) => {
-  return new google.maps.Map(document.getElementById('map'), {
+  return new google.maps.Map(document.getElementById("map"), {
     center: { lat, lng },
-    zoom: 15
+    zoom: 15,
   });
 };
 
@@ -27,15 +31,15 @@ const createMarker = ({ map, position }) => {
  * @param {Object} [onError]
  * @return {number}
  */
-const trackLocation = ({ onSuccess, onError = () => { } }) => {
-  if ('geolocation' in navigator === false) {
-    return onError(new Error('Geolocation is not supported by your browser.'));
+const trackLocation = ({ onSuccess, onError = () => {} }) => {
+  if ("geolocation" in navigator === false) {
+    return onError(new Error("Geolocation is not supported by your browser."));
   }
 
   return navigator.geolocation.watchPosition(onSuccess, onError, {
     enableHighAccuracy: true,
     timeout: 5000,
-    maximumAge: 0
+    maximumAge: 0,
   });
 };
 
@@ -44,38 +48,45 @@ const trackLocation = ({ onSuccess, onError = () => { } }) => {
  * @param {number} code
  * @return {String}
  */
-const getPositionErrorMessage = code => {
+const getPositionErrorMessage = (code) => {
   switch (code) {
     case 1:
-      return 'Permission denied.';
+      return "Permission denied.";
     case 2:
-      return 'Position unavailable.';
+      return "Position unavailable.";
     case 3:
-      return 'Timeout reached.';
+      return "Timeout reached.";
   }
-}
+};
 
 /**
  * Initialize the application.
  * Automatically called by the google maps API once it's loaded.
-*/
+ */
 function init() {
   const initialPosition = { lat: 59.32, lng: 17.84 };
   const map = createMap(initialPosition);
   const marker = createMarker({ map, position: initialPosition });
-  const $info = document.getElementById('info');
+  const $info = document.getElementById("info");
 
   let watchId = trackLocation({
     onSuccess: ({ coords: { latitude: lat, longitude: lng } }) => {
+      console.log(lat, lng);
+      
+      // SEND TO SOCKET
+      socket.emit("DriverLocation", { coords: { latitude: lat, longitude: lng } });
+
       marker.setPosition({ lat, lng });
       map.panTo({ lat, lng });
       $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
-      $info.classList.remove('error');
+      $info.classList.remove("error");
     },
-    onError: err => {
+    onError: (err) => {
       console.log($info);
-      $info.textContent = `Error: ${err.message || getPositionErrorMessage(err.code)}`;
-      $info.classList.add('error');
-    }
+      $info.textContent = `Error: ${
+        err.message || getPositionErrorMessage(err.code)
+      }`;
+      $info.classList.add("error");
+    },
   });
 }
