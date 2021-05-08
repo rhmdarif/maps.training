@@ -79,7 +79,7 @@ function init() {
     let position = { lat, lng };
     
     map.setCenter(position);
-    map.setPosition(position);
+    marker.setPosition(position);
 
     $info.textContent = `Lat: ${lat.toFixed(5)} Lng: ${lng.toFixed(5)}`;
     $info.classList.remove("error");
