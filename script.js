@@ -1,4 +1,4 @@
-const socket = io("http://addowebserver.herokuapp.com/");
+const socket = io("https://addowebserver.herokuapp.com/");
 socket.on("DriverLocation", (data) => {
   console.log(data);
 });
